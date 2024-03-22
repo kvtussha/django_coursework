@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="display-4">{{ object.status }}</h2>
+            <p class="lead">{{ object.message }}</p>
+            <p class="lead">{{ object.scheduled_time }}</p>
+            <p class="lead">{{ object.start_date }}</p>
+            <p class="lead">{{ object.end_date }}</p>
+            <p class="lead">{{ object.frequency }}</p>
+            <div class="mt-2">
+                <a href="{% url 'main:sending-delete' object.pk %}" class="btn btn-danger btn-lg btn-block">Удалить</a>
+                <a href="{% url 'main:sending-edit' object.pk %}" class="btn btn-warning btn-lg btn-block">Изменить</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
