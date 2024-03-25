@@ -2,10 +2,12 @@ from datetime import date
 
 from django.db import models
 
+from users.models import User
+
 NULLABLE = {'blank': True, 'null': True}
 
 
-class Client:
+class Client(models.Model):
     email = models.EmailField()
     name = models.CharField(max_length=150, verbose_name='Имя', **NULLABLE)
     surname = models.CharField(max_length=150, verbose_name='Фамилия', **NULLABLE)
@@ -36,6 +38,7 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     subject = models.CharField(max_length=255, verbose_name='Тема сообщения')
     body = models.TextField(verbose_name='Текст сообщения')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
 
     def __str__(self):
         return self.subject
