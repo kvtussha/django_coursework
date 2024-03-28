@@ -1,13 +1,15 @@
 from django.urls import path
 
-from main.views import SendingListView, SendingCreateView, SendingUpdateView, SendingDeleteView
+from main.views import (MailingListView, MailingCreateView,
+                        MailingUpdateView, MailingDeleteView, contacts)
 
 app_name = 'main'
 
 urlpatterns = [
-    path('', SendingListView.as_view(), name='sending-list'),
-    path('sending/detail/<int:pk>/', SendingListView.as_view(), name='sending-list'),
-    path('sending/form/', SendingCreateView.as_view(), name='sending-form'),
-    path('sending/edit/', SendingUpdateView.as_view(), name='sending-edit'),
-    path('sending/delete/', SendingDeleteView.as_view(), name='sending-delete'),
+    path('', MailingListView.as_view(), name='mailing-list'),
+    path('contacts/', contacts, name='contacts'),
+    path('mailing/detail/<int:pk>/', MailingListView.as_view(), name='mailing-detail'),
+    path('mailing/form/', MailingCreateView.as_view(), name='mailing-form'),
+    path('mailing/edit/', MailingUpdateView.as_view(), name='mailing-edit'),
+    path('mailing/delete/', MailingDeleteView.as_view(), name='mailing-delete'),
 ]

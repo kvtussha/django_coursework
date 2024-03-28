@@ -34,7 +34,7 @@ class Client(models.Model):
         ]
 
 
-class Message(models.Model):
+class MailingMessage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     subject = models.CharField(max_length=255, verbose_name='Тема сообщения')
     body = models.TextField(verbose_name='Текст сообщения')
@@ -48,7 +48,7 @@ class Message(models.Model):
         verbose_name_plural = 'Сообщения'
 
 
-class Sending(models.Model):
+class Mailing(models.Model):
     ONCE = 'Один раз'
     DAILY = '1 раз в день'
     WEEKLY = '1 раз в неделю'
@@ -73,7 +73,7 @@ class Sending(models.Model):
 
     scheduled_time = models.TimeField(auto_now_add=True, verbose_name='Время рассылки')
     status = models.CharField(max_length=50, default='Создана', choices=SELECT_STATUS, verbose_name='Статус')
-    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='Сообщение')
+    message = models.ForeignKey(MailingMessage, on_delete=models.CASCADE, verbose_name='Сообщение')
     start_date = models.DateField(default=date.today, verbose_name='Дата начала')
     end_date = models.DateField(default=date.today, verbose_name='Дата окончания')
     frequency = models.CharField(max_length=30, choices=FREQUENCY_CHOICES, verbose_name='Периодичность')
@@ -87,11 +87,11 @@ class Sending(models.Model):
         permissions = [
             (
                 'set_sending_status',
-                'Can set sending status'
+                'Can set mailing status'
             ),
             (
                 'can_view_sending',
-                'Can view sending'
+                'Can view mailing'
             ),
         ]
 
@@ -105,7 +105,7 @@ class MailingAttempt(models.Model):
         (NOT_DELIVERED, 'не доставлено'),
     )
 
-    sending = models.ForeignKey(Sending, on_delete=models.CASCADE, verbose_name='Рассылка')
+    sending = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка')
     sent_at = models.DateTimeField(auto_now_add=True, verbose_name='Время рассылки')
     status = models.CharField(choices=STATUS, verbose_name='Статус')
     response = models.TextField(**NULLABLE, verbose_name='Ответ сервера')

@@ -1,9 +1,9 @@
 from django.forms import ModelForm
 
-from main.models import Sending
+from main.models import Mailing
 
 
-class SendingForm(ModelForm):
+class MailingForm(ModelForm):
     class Meta:
-        model = Sending
+        model = Mailing
         fields = ('status', 'message', 'start_date', 'end_date', 'frequency')

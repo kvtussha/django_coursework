@@ -12,8 +12,8 @@
             <p class="lead">{{ object.end_date }}</p>
             <p class="lead">{{ object.frequency }}</p>
             <div class="mt-2">
-                <a href="{% url 'main:sending-delete' object.pk %}" class="btn btn-danger btn-lg btn-block">Удалить</a>
-                <a href="{% url 'main:sending-edit' object.pk %}" class="btn btn-warning btn-lg btn-block">Изменить</a>
+                <a href="{% url 'main:mailing-delete' object.pk %}" class="btn btn-danger btn-lg btn-block">Удалить</a>
+                <a href="{% url 'main:mailing-edit' object.pk %}" class="btn btn-warning btn-lg btn-block">Изменить</a>
             </div>
         </div>
     </div>

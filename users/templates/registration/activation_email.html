@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение регистрации</title>
+</head>
+<body>
+    <p>Здравствуйте, {{user.username}}!</p>[
+    <p>Для подтверждения вашей регистрации, пожалуйста, перейдите по следующей ссылке и введите код {{verification_code}}:</p>
+    <p><a href="{{ domain }}{% url 'users:confirm_register' %}">Подтвердить регистрацию</a></p>
+    <p>Спасибо за регистрацию!</p>
+</body>
+</html>

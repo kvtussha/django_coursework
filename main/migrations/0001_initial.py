@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Рассылка',
                 'verbose_name_plural': 'Рассылки',
-                'permissions': [('set_sending_status', 'Can set sending status'), ('can_view_sending', 'Can view sending')],
+                'permissions': [('set_sending_status', 'Can set mailing status'), ('can_view_sending', 'Can view mailing')],
             },
         ),
         migrations.CreateModel(
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 ('sent_at', models.DateTimeField(auto_now_add=True, verbose_name='Время рассылки')),
                 ('status', models.CharField(choices=[('delivered', 'доставлено'), ('not_delivered', 'не доставлено')], verbose_name='Статус')),
                 ('response', models.TextField(blank=True, null=True, verbose_name='Ответ сервера')),
-                ('sending', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='main.sending', verbose_name='Рассылка')),
+                ('mailing', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='main.mailing', verbose_name='Рассылка')),
             ],
             options={
                 'verbose_name': 'Статистика (попытка)',

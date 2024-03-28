@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 d-flex align-items-center justify-content-center mb-4">
+            <a href="{% url 'main:mailing-form' %}" class="btn btn-outline-primary btn-lg btn-block">
+                Создать новую рассылку</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for mailing in mailings %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Статус: {{ mailing.status }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1>{{ mailing.scheduled_time }}</h1>
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li>{{ mailing.message.subject|truncatechars:50 }}</li>
+                            <li><span>Частота: {{mailing.frequency}}</span></li>
+                        </ul>
+                        <a href="{% url 'main:mailing-detail' mailing.id %}"
+                           class="btn btn-primary btn-lg btn-block">Смотреть</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
