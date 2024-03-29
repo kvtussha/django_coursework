@@ -26,7 +26,6 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('main:mailing-list')
 
     def form_valid(self, form):
-
         user = form.save()
 
         current_site = self.request.get_host()
@@ -49,6 +48,7 @@ class RegisterView(CreateView):
 
         send_mail(subject, message, from_email=settings.EMAIL_HOST_USER, recipient_list=[user.email])
 
+        user.is_verified = True
         user.is_active = True
         user.save()
 

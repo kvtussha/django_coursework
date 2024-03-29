@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load mediapath_tag %}
 
 {% block content %}
 
@@ -9,27 +10,63 @@
                 Создать новую рассылку</a>
         </div>
     </div>
+
+    <div class="col-md-4 offset-md-1"> <!-- Добавлен класс offset-md-1 -->
+        <p class="my-0 font-weight-normal">Общее количество рассылок: {{ total_mailings }}</p>
+        <p class="my-0 font-weight-normal">Активные рассылки: {{ active_mailings }}</p>
+        <p class="my-0 font-weight-normal">Уникальные клиенты для рассылки: {{ unique_clients }}</p><br>
+    </div>
+
     <div class="container">
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for mailing in mailings %}
+            {% for post in blog_posts %}
             <div class="col">
                 <div class="card h-100">
                     <div class="card-header">
-                        <h4 class="my-0 font-weight-normal">Статус: {{ mailing.status }}</h4>
+                        <h6 class="my-0 font-weight-normal">{{ post.title }}</h6>
                     </div>
                     <div class="card-body">
-                        <h1>{{ mailing.scheduled_time }}</h1>
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                            <li>{{ mailing.message.subject|truncatechars:50 }}</li>
-                            <li><span>Частота: {{mailing.frequency}}</span></li>
+                            <li><img src="{% mediapath post.image %}" width="150" height="113"/></li>
+                            <li>{{ post.content|truncatechars:50 }}</li>
+                            <li><b>Просмотры: </b>{{post.views}}</li>
+                            <li><span>Дата публикации: {{post.publish_date}}</span></li>
                         </ul>
-                        <a href="{% url 'main:mailing-detail' mailing.id %}"
-                           class="btn btn-primary btn-lg btn-block">Смотреть</a>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
 </div>
+<br>
+
+<div class="col-md-4 d-flex align-items-center justify-content-center mb-4">
+    <p class="my-0 font-weight-normal">Рассылки</p>
+</div>
+
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for mailing in mailings %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="my-0 font-weight-normal">Статус: {{ mailing.status }}</h6>
+                </div>
+                <div class="card-body">
+                    <h1>{{ mailing.scheduled_time }}</h1>
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li>{{ mailing.message.subject|truncatechars:50 }}</li>
+                        <li><span>Частота: {{mailing.frequency}}</span></li>
+                    </ul>
+                    <a href="{% url 'main:mailing-detail' mailing.id %}"
+                       class="btn btn-primary btn-lg btn-block">Смотреть</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}

@@ -77,6 +77,7 @@ class Mailing(models.Model):
     start_date = models.DateField(default=date.today, verbose_name='Дата начала')
     end_date = models.DateField(default=date.today, verbose_name='Дата окончания')
     frequency = models.CharField(max_length=30, choices=FREQUENCY_CHOICES, verbose_name='Периодичность')
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return f'id: {self.id}, время рассылки: {self.scheduled_time}'
@@ -86,12 +87,12 @@ class Mailing(models.Model):
         verbose_name_plural = 'Рассылки'
         permissions = [
             (
-                'set_sending_status',
+                'set_mailing_status',
                 'Can set mailing status'
             ),
             (
-                'can_view_sending',
-                'Can view mailing'
+                'can_mailing_disabling',
+                'Отключение рассылки'
             ),
         ]
 
@@ -105,13 +106,13 @@ class MailingAttempt(models.Model):
         (NOT_DELIVERED, 'не доставлено'),
     )
 
-    sending = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка')
+    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка')
     sent_at = models.DateTimeField(auto_now_add=True, verbose_name='Время рассылки')
     status = models.CharField(choices=STATUS, verbose_name='Статус')
     response = models.TextField(**NULLABLE, verbose_name='Ответ сервера')
 
     def __str__(self):
-        return f"{self.sending.message.subject} - {self.sent_at}"
+        return f"{self.mailing.message.subject} - {self.sent_at}"
 
     class Meta:
         verbose_name = 'Статистика (попытка)'

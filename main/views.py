@@ -1,11 +1,15 @@
+import random
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from blog.models import Blog
 from main.forms import MailingForm
-from main.models import Mailing
+from main.models import Mailing, Client
 
 
 class MailingListView(ListView):
@@ -13,8 +17,20 @@ class MailingListView(ListView):
     template_name = 'main/mailing/mailing_list.html'
     context_object_name = 'mailings'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_mailings'] = Mailing.objects.count()
+        context['active_mailings'] = Mailing.objects.filter(is_active=True).count()
+        context['unique_clients'] = Client.objects.count()
+        blog_posts = list(Blog.objects.all())
+        if len(blog_posts) > 3:
+            context['blog_posts'] = random.sample(blog_posts, k=3)
+        else:
+            context['blog_posts'] = blog_posts
+        return context
 
-class MailingDetailView(DetailView):
+
+class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
     template_name = 'main/mailing/mailing_detail.html'
     context_object_name = 'mailing'
@@ -24,7 +40,7 @@ class MailingDetailView(DetailView):
         return self.object
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('main:mailing-list')
@@ -36,7 +52,7 @@ class MailingCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
     template_name = 'main/mailing/mailing_form.html'
@@ -45,7 +61,7 @@ class MailingUpdateView(UpdateView):
         return reverse('main:mailing-detail', kwargs={'pk': self.object.pk})
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     template_name = 'main/mailing/mailing_confirm_delete.html'
     success_url = reverse_lazy('main:mailing-list')

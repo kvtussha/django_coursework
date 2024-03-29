@@ -2,7 +2,6 @@ import os
 
 from django.core.management import BaseCommand
 
-from config.settings import POSTGRES_PASSWORD
 from users.models import User
 
 
@@ -16,6 +15,6 @@ class Command(BaseCommand):
             is_superuser=True,
             verification_code='123456',
         )
-        user.set_password('o977kx')
+        user.set_password(os.getenv('POSTGRES_PASSWORD'))
         user.is_active = True
         user.save()

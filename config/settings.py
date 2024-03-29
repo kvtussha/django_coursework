@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'main',
-    'users'
+    'users',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -79,15 +83,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'skymail',
-        'USER': 'postgres',
+        'NAME': os.getenv('NAME_POSTGRES'),
+        'USER': os.getenv('USER_POSTGRES'),
         'HOST': '127.0.0.1',
         'PORT': 5432,
-        'PASSWORD': 'o977kx'
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD')
     }
 }
 
-POSTGRES_PASSWORD = 'o977kx'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -147,11 +150,21 @@ LOGIN_URL = '/users/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'deagleneo@yandex.ru'
-EMAIL_HOST_PASSWORD = 'zwnruulpqsdbwtxz'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+
+CACHE_ENABLED = os.getenv('CACHE_ENABLED')
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv('CACHE_LOCATION'),
+        }
+    }
