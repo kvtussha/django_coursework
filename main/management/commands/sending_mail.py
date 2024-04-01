@@ -1,41 +1,36 @@
-from apscheduler.schedulers.background import BackgroundScheduler
+import os
+
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from main.models import Sending, MailingAttempt
+from main.models import Mailing, MailingAttempt, MailingMessage
 from django.core.mail import send_mail
-from django.conf import settings
-from datetime import timedelta
 
 
 class Command(BaseCommand):
-    help = 'Starts mailing scheduler'
+    help = 'Send newsletters to clients'
 
     def handle(self, *args, **options):
-        self.start()
+        now = timezone.now()
+        newsletters = Mailing.objects.filter(start_date__lte=now, end_date__gte=now)
 
-    def start(self):
-        scheduler = BackgroundScheduler()
-        scheduler.add_job(self.send_mailing, 'interval', minutes=30)  # Запуск каждые 30 минут
-        scheduler.start()
+        for newsletter in newsletters:
+            clients = newsletter.clients.all()
 
-    def send_mailing(self):
-        current_datetime = timezone.now()
-        mailings = Sending.objects.filter(date__lte=current_datetime).filter(
-            status__in=['CREATED', 'LAUNCHED'])  # Вы можете настроить статусы как в вашей модели
-        for mailing in mailings:
-            last_attempt = MailingAttempt.objects.filter(mailing=mailing).order_by('-date').first()
-            if not last_attempt or current_datetime - last_attempt.date >= timedelta(days=1):
+            for client in clients:
                 try:
-                    # Отправляем письмо
+                    # Отправка письма
                     send_mail(
-                        subject=mailing.subject,
-                        message=mailing.text,
-                        from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[client.email for client in mailing.clients.all()],
-                        fail_silently=False
+                        newsletter.title,
+                        'Текст рассылки',
+                        os.getenv('EMAIL_HOST_USER'),
+                        [client.email],
+                        fail_silently=False,
                     )
-                    # Создаем запись о попытке рассылки
-                    MailingAttempt.objects.create(mailing=mailing)
+                    success = True
                 except Exception as e:
-                    # Обработка ошибок отправки
-                    self.stdout.write(self.style.ERROR(f'Failed to send mailing: {e}'))
+                    success = False
+
+                # Сохранение статистики о попытке отправки
+                MailingAttempt.objects.create(newsletter=newsletter, success=success)
+
+        self.stdout.write(self.style.SUCCESS('Successfully sent newsletters'))

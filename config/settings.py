@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
 
     'main',
     'users',
@@ -169,3 +170,7 @@ if CACHE_ENABLED:
             "LOCATION": os.getenv('CACHE_LOCATION'),
         }
     }
+
+CRONJOBS = [
+    ('*/5 * * * *', 'myapp.cron.send_newsletter'),
+]
