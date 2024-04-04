@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'django_crontab',
 
     'main',
@@ -172,5 +173,5 @@ if CACHE_ENABLED:
     }
 
 CRONJOBS = [
-    ('*/5 * * * *', 'myapp.cron.send_newsletter'),
+    ('*/5 * * * *', 'main.cron.send_email_job')
 ]

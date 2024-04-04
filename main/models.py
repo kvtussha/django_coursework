@@ -74,13 +74,14 @@ class Mailing(models.Model):
     scheduled_time = models.TimeField(auto_now_add=True, verbose_name='Время рассылки')
     status = models.CharField(max_length=50, default='Создана', choices=SELECT_STATUS, verbose_name='Статус')
     message = models.ForeignKey(MailingMessage, on_delete=models.CASCADE, verbose_name='Сообщение')
-    start_date = models.DateField(default=date.today, verbose_name='Дата начала')
-    end_date = models.DateField(default=date.today, verbose_name='Дата окончания')
+    start_date = models.DateTimeField(default=date.today, verbose_name='Дата начала')
+    end_date = models.DateTimeField(default=date.today, verbose_name='Дата окончания')
     frequency = models.CharField(max_length=30, choices=FREQUENCY_CHOICES, verbose_name='Периодичность')
     is_active = models.BooleanField(default=False)
+    # clients = models.ManyToManyField(Client, related_name='mailing_messages', verbose_name='Клиенты')
 
     def __str__(self):
-        return f'id: {self.id}, время рассылки: {self.scheduled_time}'
+        return f'{self.start_date}-{self.end_date} Время рассылки: {self.scheduled_time}'
 
     class Meta:
         verbose_name = 'Рассылка'

@@ -2,7 +2,7 @@ import os
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from main.models import Mailing, MailingAttempt, MailingMessage
+from main.models import Mailing, MailingAttempt
 from django.core.mail import send_mail
 
 
@@ -18,9 +18,8 @@ class Command(BaseCommand):
 
             for client in clients:
                 try:
-                    # Отправка письма
                     send_mail(
-                        newsletter.title,
+                        newsletter.message.subject,
                         'Текст рассылки',
                         os.getenv('EMAIL_HOST_USER'),
                         [client.email],

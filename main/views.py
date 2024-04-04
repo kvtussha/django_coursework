@@ -48,7 +48,6 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.creation_date = timezone.now()
-        form.instance.slug = slugify(form.instance.title)
         return super().form_valid(form)
 
 
