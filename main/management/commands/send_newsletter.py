@@ -12,25 +12,22 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         now = timezone.now()
-        newsletters = Mailing.objects.filter(start_date__lte=now, end_date__gte=now)
+        mailings = Mailing.objects.filter(start_date__lte=now, end_date__gte=now)
 
-        for newsletter in newsletters:
-            clients = newsletter.clients.all()
+        for mailing in mailings:
+            clients = mailing.clients.all()
 
             for client in clients:
-                try:
-                    send_mail(
-                        newsletter.message.subject,
-                        'Текст рассылки',
-                        os.getenv('EMAIL_HOST_USER'),
-                        [client.email],
-                        fail_silently=False,
-                    )
-                    success = True
-                except Exception as e:
-                    success = False
+                success = send_mail(
+                    mailing.message.subject,
+                    'Текст рассылки',
+                    os.getenv('EMAIL_HOST_USER'),
+                    [client.email],
+                    fail_silently=False,
+                )
 
                 # Сохранение статистики о попытке отправки
-                MailingAttempt.objects.create(newsletter=newsletter, success=success)
+                MailingAttempt.objects.create(mailing=mailing, sent_at=now, status='COMPLETED',
+                                              response=success)
 
         self.stdout.write(self.style.SUCCESS('Successfully sent newsletters'))

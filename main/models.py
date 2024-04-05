@@ -110,7 +110,7 @@ class MailingAttempt(models.Model):
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка')
     sent_at = models.DateTimeField(auto_now_add=True, verbose_name='Время рассылки')
     status = models.CharField(choices=STATUS, verbose_name='Статус')
-    response = models.TextField(**NULLABLE, verbose_name='Ответ сервера')
+    response = models.TextField(**NULLABLE, verbose_name='Ответ сервера', default='Ответ сервера')
 
     def __str__(self):
         return f"{self.mailing.message.subject} - {self.sent_at}"

@@ -9,7 +9,8 @@ class MainConfig(AppConfig):
 
 class SchedulerConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'your_app_name'
+    name = 'main'
 
     def ready(self):
         call_command('sending_mail')
+
