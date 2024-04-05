@@ -2,6 +2,7 @@ import os
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+
 from main.models import Mailing, MailingAttempt
 from django.core.mail import send_mail
 

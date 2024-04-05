@@ -173,5 +173,5 @@ if CACHE_ENABLED:
     }
 
 CRONJOBS = [
-    ('*/5 * * * *', 'main.cron.send_email_job')
+    ('*/5 * * * *', 'main.cron.send_email_job', '>> /tmp/send_job.log')
 ]
