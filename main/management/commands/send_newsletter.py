@@ -16,6 +16,7 @@ class Command(BaseCommand):
 
         for mailing in mailings:
             clients = mailing.clients.all()
+            mailing.is_active = True
 
             for client in clients:
                 success = send_mail(
